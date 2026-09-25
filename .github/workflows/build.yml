@@ -1,0 +1,31 @@
+name: Build APK (EAS)
+
+# Builds an installable APK in Expo's cloud (no local Android SDK needed).
+# Requires a free Expo account and an EXPO_TOKEN secret — see README.md.
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: |
+          npm install
+          npx expo install react react-native expo-file-system
+
+      - name: Install EAS CLI
+        run: npm install -g eas-cli
+
+      - name: Build APK on Expo's servers
+        run: eas build --platform android --profile preview --non-interactive
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}

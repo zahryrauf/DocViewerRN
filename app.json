@@ -1,0 +1,13 @@
+{
+  "expo": {
+    "name": "DocViewer",
+    "slug": "docviewer",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "platforms": ["android"],
+    "android": {
+      "package": "com.zahry.docviewer"
+    }
+  }
+}

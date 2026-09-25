@@ -8,10 +8,13 @@
     "android": "expo start --android"
   },
   "dependencies": {
-    "babel-preset-expo": "~57.0.0",
-    "expo": "^57.0.25",
-    "expo-file-system": "~57.0.7",
-    "react": "19.2.3",
-    "react-native": "0.86.3"
+    "babel-preset-expo": "~54.0.10",
+    "expo": "~54.0.0",
+    "expo-build-properties": "~1.0.10",
+    "expo-file-system": "~19.0.24",
+    "react": "19.1.0",
+    "react-native": "0.81.5",
+    "react-native-blob-util": "^0.22.2",
+    "react-native-pdf": "^6.7.7"
   }
 }

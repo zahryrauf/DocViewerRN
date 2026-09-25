@@ -12,6 +12,7 @@ import {
   View,
 } from 'react-native';
 import * as FileSystem from 'expo-file-system/legacy';
+import PdfViewerScreen from './screens/PdfViewerScreen';
 
 const SAF = FileSystem.StorageAccessFramework;
 
@@ -28,7 +29,7 @@ const ICONS = {
   txt: '📄', md: '📄',
 };
 
-const MAX_ENTRIES = 3000; // safety cap so a huge tree can't hang the scan
+const MAX_ENTRIES = 3000;
 const MAX_DEPTH = 12;
 
 function extOf(name) {
@@ -37,6 +38,7 @@ function extOf(name) {
 }
 
 export default function App() {
+  const [selectedPdf, setSelectedPdf] = useState(null);
   const [rootUri, setRootUri] = useState(null);
   const [allDocs, setAllDocs] = useState([]);
   const [query, setQuery] = useState('');
@@ -44,8 +46,8 @@ export default function App() {
 
   // Recursively walk a SAF tree. We can't ask "is this a directory?" directly,
   // so we try to read it as one — if that fails, it's a file.
-  const walk = useCallback(async (uri, out, depth) => {
-    if (depth > MAX_DEPTH || out.length >= MAX_ENTRIES) return;
+  const walk = useCallback(async (uri, out, depth, state) => {
+    if (depth > MAX_DEPTH || state.visited >= MAX_ENTRIES) return;
 
     let entries;
     try {
@@ -55,7 +57,8 @@ export default function App() {
     }
 
     for (const entryUri of entries) {
-      if (out.length >= MAX_ENTRIES) return;
+      if (state.visited >= MAX_ENTRIES) return;
+      state.visited += 1;
 
       let subEntries = null;
       try {
@@ -65,7 +68,7 @@ export default function App() {
       }
 
       if (subEntries !== null) {
-        await walk(entryUri, out, depth + 1);
+        await walk(entryUri, out, depth + 1, state);
       } else {
         const rawName = entryUri.split('/').pop() || entryUri;
         let name = rawName;
@@ -86,7 +89,7 @@ export default function App() {
     setLoading(true);
     try {
       const found = [];
-      await walk(uri, found, 0);
+      await walk(uri, found, 0, { visited: 0 });
       found.sort((a, b) => a.name.localeCompare(b.name));
       setAllDocs(found);
     } catch (e) {
@@ -108,6 +111,10 @@ export default function App() {
   };
 
   const openDoc = async (doc) => {
+    if (doc.ext === 'pdf') {
+      setSelectedPdf(doc);
+      return;
+    }
     try {
       // Passing the SAF content:// uri straight to the system — Android
       // resolves the right app (or shows a chooser) using the uri's own
@@ -124,6 +131,15 @@ export default function App() {
   const filtered = query
     ? allDocs.filter((d) => d.name.toLowerCase().includes(query.toLowerCase()))
     : allDocs;
+
+  if (selectedPdf) {
+    return (
+      <PdfViewerScreen
+        document={selectedPdf}
+        onBack={() => setSelectedPdf(null)}
+      />
+    );
+  }
 
   return (
     <SafeAreaView style={styles.safe}>

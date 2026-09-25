@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+
+# Expo
+.expo/
+.expo-shared/
+web-build/
+dist/
+
+# Native build output
+android/.gradle/
+android/.idea/
+android/build/
+android/app/build/
+android/local.properties
+ios/Pods/
+ios/build/
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+*.keystore
+*.jks
+*.p12
+*.mobileprovision
+credentials.json
+
+# EAS and local tooling
+eas-build/
+.eas/
+
+# Logs and OS files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store

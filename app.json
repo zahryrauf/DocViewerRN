@@ -5,9 +5,16 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
-    "platforms": ["android"],
+    "platforms": [
+      "android"
+    ],
     "android": {
       "package": "com.zahry.docviewer"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "2103271b-931d-4470-a643-31fca90dc52b"
+      }
     }
   }
 }
